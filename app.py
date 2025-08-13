@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request, jsonify
 import json
 import os
 from datetime import datetime
@@ -15,9 +15,36 @@ def load_expenses():
             return json.load(f)
     return []
 
+# 
+# Function for saving expenses as a data
+def save_expenses(expenses):
+    with open(DATA_FILE, 'w', encoding='utf-8') as f:
+        json.dump(expenses, f, ensure_ascii=False, indent=4)
+
+# Welcoming route
 @app.route('/')
 def hello_world():
-    return 'Hello world, my backend is working now!'
+    return 'Hello world, my budget manager is here!'
+
+# Expenses route
+@app.route('/expenses', methods=['POST'])
+def add_expense():
+    data = request.get_json()  # get JSON data from the request
+    if not data or 'amount' not in data or 'category' not in data:
+        return jsonify({"error": "Fields 'amount' and 'category' are required"}), 400
+
+    expense = {
+        "amount": float(data['amount']),
+        "category": data['category'],
+        "date": data.get('date', datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+    }
+
+    expenses = load_expenses()
+    expenses.append(expense)
+    save_expenses(expenses)
+
+    return jsonify(expense), 201
+
 
 if __name__ == '__main__':
     app.run(debug=True)
