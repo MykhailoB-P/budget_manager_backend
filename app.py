@@ -45,6 +45,14 @@ def add_expense():
 
     return jsonify(expense), 201
 
+# Route to get all expenses
+@app.route('/expenses', methods=['GET'])
+def get_expenses():
+    expenses = load_expenses()
+    return jsonify(expenses)
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
