@@ -3,7 +3,6 @@ import json
 import os
 from datetime import datetime
 
-
 app = Flask(__name__)
 
 DATA_FILE = 'expenses.json'
@@ -33,6 +32,18 @@ def add_expense():
     if not data or 'amount' not in data or 'category' not in data:
         return jsonify({"error": "Fields 'amount' and 'category' are required"}), 400
 
+ # Amount validation
+    try:
+        amount = float(data['amount'])
+    except ValueError:
+        return jsonify({"error": "Amount must be a number"}), 400
+
+    # Category validation
+    category = str(data['category']).strip()
+    if not category:
+        return jsonify({"error": "Category cannot be empty"}), 400
+
+
     expense = {
         "amount": float(data['amount']),
         "category": data['category'],
@@ -51,7 +62,15 @@ def get_expenses():
     expenses = load_expenses()
     return jsonify(expenses)
 
-
+# Route to get statistics by category
+@app.route('/stats', methods=['GET'])
+def get_stats():
+    expenses = load_expenses()
+    stats = {}
+    for exp in expenses:
+        category = exp['category']
+        stats[category] = stats.get(category, 0) + exp['amount']
+    return jsonify(stats)
 
 
 if __name__ == '__main__':
