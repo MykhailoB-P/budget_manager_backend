@@ -1,6 +1,16 @@
+from flask import Blueprint, request, jsonify
 from utils import load_expenses, save_expense
+from datetime import datetime
 
-# POST route
+# Create Blueprint
+api = Blueprint('api', __name__)
+
+# Home route
+@api.route('/')
+def home():
+    return 'Hello world, my budget manager is here!'
+
+# POST route to add expense
 @api.route('/expenses', methods=['POST'])
 def add_expense():
     data = request.get_json()
@@ -10,13 +20,13 @@ def add_expense():
     expense = {
         "amount": float(data['amount']),
         "category": data['category'],
-        "date": data.get('date')
+        "date": data.get('date', datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     }
 
     save_expense(expense)
     return expense, 201
 
-# GET route
+# GET route to get all expenses
 @api.route('/expenses', methods=['GET'])
 def get_expenses():
     return load_expenses()
