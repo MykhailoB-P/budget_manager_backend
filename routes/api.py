@@ -1,34 +1,22 @@
-from flask import Blueprint, request, jsonify
-from datetime import datetime
-from utils import validate_expense, format_date
-from database import add_expense, get_all_expenses, get_expense_stats
+from utils import load_expenses, save_expense
 
-api = Blueprint('api', __name__)
-
-@api.route('/')
-def home():
-    return 'Hello world, my budget manager is here!'
-
+# POST route
 @api.route('/expenses', methods=['POST'])
 def add_expense():
     data = request.get_json()
-    errors = validate_expense(data)
-    if errors:
-        return jsonify({"errors": errors}), 400
+    if not data or 'amount' not in data or 'category' not in data:
+        return {"error": "Fields 'amount' and 'category' are required"}, 400
 
     expense = {
-        "amount": data["amount"],
-        "category": data["category"],
-        "date": format_date(data.get("date", datetime.now()))
+        "amount": float(data['amount']),
+        "category": data['category'],
+        "date": data.get('date')
     }
 
-    add_expense(expense)
-    return jsonify(expense), 201
+    save_expense(expense)
+    return expense, 201
 
+# GET route
 @api.route('/expenses', methods=['GET'])
 def get_expenses():
-    return jsonify(get_all_expenses())
-
-@api.route('/stats', methods=['GET'])
-def get_stats():
-    return jsonify(get_expense_stats())
+    return load_expenses()

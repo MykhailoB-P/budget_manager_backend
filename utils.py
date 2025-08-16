@@ -1,21 +1,13 @@
+from database import expenses_collection
 from datetime import datetime
 
-def format_date(date_obj):
-    if isinstance(date_obj, str):
-        return date_obj
-    return date_obj.strftime('%Y-%m-%d %H:%M:%S')
+def load_expenses():
+    # Return all expenses as a list
+    return list(expenses_collection.find({}, {"_id": 0}))
 
-def validate_expense(data):
-    errors = []
-    if "amount" not in data:
-        errors.append("Field 'amount' is required")
-    else:
-        try:
-            data["amount"] = float(data["amount"])
-        except ValueError:
-            errors.append("Amount must be a number")
-    if "category" not in data or not data["category"].strip():
-        errors.append("Field 'category' is required and cannot be empty")
-    return errors
-
-DEFAULT_CATEGORIES = ["Food", "Transport", "Entertainment", "Bills", "Other"]
+def save_expense(expense):
+    # Add date if not exists
+    if "date" not in expense:
+        expense["date"] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    # Insert into MongoDB
+    expenses_collection.insert_one(expense)
