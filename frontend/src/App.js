@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import Expenses from './Expenses';
 import AddExpense from './AddExpense';
-import './App.css'; // Make sure to import CSS for animations
+import './App.css';
 
 function App() {
   const [expenses, setExpenses] = useState([]);
   const [showExpenses, setShowExpenses] = useState(false);
 
   useEffect(() => {
-    // Fetch expenses from backend
     fetch('http://127.0.0.1:5000/expenses')
       .then(res => res.json())
       .then(data => setExpenses(data))
@@ -32,8 +31,9 @@ function App() {
         {showExpenses ? 'Hide list' : 'Show list'}
       </button>
 
+      {/* Keep the container always in DOM for animation */}
       <div className={`expenses-container ${showExpenses ? 'show' : 'hide'}`}>
-        {showExpenses && <Expenses expenses={expenses} />}
+        <Expenses expenses={expenses} />
       </div>
     </div>
   );
