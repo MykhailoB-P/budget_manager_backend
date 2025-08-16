@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import Expenses from './Expenses';
 import AddExpense from './AddExpense';
-import './App.css';
+import './App.css'; // Make sure to import CSS for animations
 
 function App() {
   const [expenses, setExpenses] = useState([]);
-  const [showExpenses, setShowExpenses] = useState(false); // новый стейт для показа/скрыти
+  const [showExpenses, setShowExpenses] = useState(false);
 
-  // Function for loading expenses from database
   useEffect(() => {
+    // Fetch expenses from backend
     fetch('http://127.0.0.1:5000/expenses')
       .then(res => res.json())
-      .then(data => setExpenses(data));
+      .then(data => setExpenses(data))
+      .catch(err => console.error('Error fetching expenses:', err));
   }, []);
 
   const addExpense = (expense) => {
@@ -23,15 +24,17 @@ function App() {
   };
 
   return (
-    <div>
+    <div className="App">
       <h1>My First Web App - Budget Manager</h1>
       <AddExpense addExpense={addExpense} />
 
       <button onClick={toggleExpenses}>
-        {showExpenses ? 'Hide list' : 'Show List'}
+        {showExpenses ? 'Hide list' : 'Show list'}
       </button>
 
-      {showExpenses && <Expenses expenses={expenses} />}
+      <div className={`expenses-container ${showExpenses ? 'show' : 'hide'}`}>
+        {showExpenses && <Expenses expenses={expenses} />}
+      </div>
     </div>
   );
 }
