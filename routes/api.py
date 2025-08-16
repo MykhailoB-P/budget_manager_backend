@@ -15,25 +15,16 @@ def home():
 def add_expense():
     data = request.get_json()
     if not data or 'amount' not in data or 'category' not in data:
-        return jsonify({"error": "Fields 'amount' and 'category' are required"}), 400
-
-    try:
-        amount = float(data['amount'])
-    except ValueError:
-        return jsonify({"error": "Amount must be a number"}), 400
-
-    category = str(data['category']).strip()
-    if not category:
-        return jsonify({"error": "Category cannot be empty"}), 400
+        return {"error": "Fields 'amount' and 'category' are required"}, 400
 
     expense = {
-        "amount": amount,
-        "category": category,
+        "amount": float(data['amount']),
+        "category": data['category'],
         "date": data.get('date', datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     }
 
-    saved_expense = save_expense(expense)  # now includes _id as string
-    return saved_expense, 201
+     saved = save_expense(expense)
+    return saved, 201
 
 # GET route to get all expenses
 @api.route('/expenses', methods=['GET'])

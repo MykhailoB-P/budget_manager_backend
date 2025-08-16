@@ -3,10 +3,10 @@ from datetime import datetime
 from bson.objectid import ObjectId
 
 def load_expenses():
-    expenses = list(expenses_collection.find({}))
+    expenses = list(expenses_collection.find())
     # Convert ObjectId to string for JSON serialization
-    for exp in expenses:
-        exp["id"] = str(exp["_id"])
+    for e in expenses:
+        e["id"] = str(e["_id"])
     return expenses
 
 def save_expense(expense):
