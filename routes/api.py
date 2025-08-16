@@ -22,7 +22,7 @@ def add_expense():
         "date": format_date(data.get("date", datetime.now()))
     }
 
-    insert_expense(expense)
+    add_expense(expense)
     return jsonify(expense), 201
 
 @api.route('/expenses', methods=['GET'])
