@@ -23,7 +23,7 @@ def add_expense():
         "date": data.get('date', datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     }
 
-     saved = save_expense(expense)
+    saved = save_expense(expense)
     return saved, 201
 
 # GET route to get all expenses
