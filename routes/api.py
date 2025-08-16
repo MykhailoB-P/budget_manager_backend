@@ -23,10 +23,11 @@ def add_expense():
         "date": data.get('date', datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     }
 
-    saved = save_expense(expense)
-    return saved, 201
+    save_expense(expense)
+    return jsonify(expense), 201  # <- jsonify
 
 # GET route to get all expenses
 @api.route('/expenses', methods=['GET'])
 def get_expenses():
-    return jsonify(load_expenses())
+    expenses = load_expenses()
+    return jsonify(expenses)  # <- jsonify

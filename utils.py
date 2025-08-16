@@ -3,11 +3,8 @@ from datetime import datetime
 from bson.objectid import ObjectId
 
 def load_expenses():
-    expenses = list(expenses_collection.find())
-    # Convert ObjectId to string for JSON serialization
-    for e in expenses:
-        e["id"] = str(e["_id"])
-    return expenses
+    expenses = list(expenses_collection.find({}, {"_id": 0}))
+    return expenses  # оставляем обычный список, jsonify будем делать в роуте
 
 def save_expense(expense):
     if "date" not in expense:
