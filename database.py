@@ -7,7 +7,7 @@ db = client["budget_manager"]                        # database name
 expenses_collection = db["expenses"]                 # collection name
 
 # Add a new expense
-def add_expense_db(expense):
+def add_expense(expense):
     if "date" not in expense:
         expense["date"] = datetime.now()
     return expenses_collection.insert_one(expense)
@@ -17,7 +17,7 @@ def get_all_expenses():
     return list(expenses_collection.find({}, {"_id": 0}))  # hide _id for cleaner JSON
 
 # Get stats by category
-def get_stats():
+def get_expense_stats():
     stats = {}
     for exp in get_all_expenses():
         category = exp["category"]
