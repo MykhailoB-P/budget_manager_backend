@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from datetime import datetime
-from utils import load_expenses, save_expenses
+from utils import load_expenses, save_expense
 
 api = Blueprint('api', __name__)
 
