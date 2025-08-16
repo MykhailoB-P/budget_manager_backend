@@ -9,11 +9,9 @@ db = client["budget_manager"]
 # Use collection "expenses"
 expenses_collection = db["expenses"]
 
-
 # Save an expense
 def save_expense(expense):
     expenses_collection.insert_one(expense)
-
 
 # Load all expenses
 def load_expenses():
