@@ -18,8 +18,8 @@ def get_all_expenses():
 
 # Get stats by category
 def get_stats():
-    pipeline = [
-        {"$group": {"_id": "$category", "total": {"$sum": "$amount"}}}
-    ]
-    result = expenses_collection.aggregate(pipeline)
-    return {item["_id"]: item["total"] for item in result}
+    stats = {}
+    for exp in get_all_expenses():
+        category = exp["category"]
+        stats[category] = stats.get(category, 0) + exp["amount"]
+    return stats
