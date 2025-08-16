@@ -1,23 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import Expenses from './Expenses';
+import AddExpense from './AddExpense';
 
 function App() {
+  const [expenses, setExpenses] = useState([]);
+
+  useEffect(() => {
+    fetch('http://127.0.0.1:5000/expenses')
+      .then(res => res.json())
+      .then(data => setExpenses(data));
+  }, []);
+
+  const addExpense = (expense) => {
+    setExpenses([...expenses, expense]);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>My First Web App - Budget Manager</h1>
+      <AddExpense addExpense={addExpense} />
+      <Expenses expenses={expenses} />
     </div>
   );
 }
